@@ -1,0 +1,7 @@
+# will not be added to the repo
+
+.idea/
+db.sqlite3
+mysite/__pycache__/
+forms/__pycache__/
+

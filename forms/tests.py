@@ -28,6 +28,11 @@ class RegistrationBookTest(TestCase):
         response = Client(enforce_csrf_checks=True).get('/forms/registration_book/')
         self.assertEqual(response.status_code, 200)
 
+    def test_context_n_template(self):
+        response = Client().get('/forms/registration_book/')
+        self.assertEqual(response.context, 'Check')
+
+
 
 class InputInfo(TestCase):
 
