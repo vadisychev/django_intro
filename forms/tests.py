@@ -28,11 +28,6 @@ class RegistrationBookTest(TestCase):
         response = Client(enforce_csrf_checks=True).get('/forms/registration_book/')
         self.assertEqual(response.status_code, 200)
 
-    def test_context_n_template(self):
-        response = Client().get('/forms/registration_book/')
-        self.assertEqual(response.context, 'Check')
-
-
 
 class InputInfo(TestCase):
 
@@ -41,19 +36,19 @@ class InputInfo(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_redirect_chain_post(self):
-        response = Client(follow=True).post('forms/input_info/', {
+        response = Client(follow=True).post('/forms/input_info/', {
                                 'first_name': 'test',
                                 'last_name': 'test',
                                 'user_email': 'test@test.ru'
                                 })
-        self.assertEqual(response.redirect_chain, '/forms/registration_book/')
-        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.content, '/forms/input_info/forms/registration_book/')
+        self.assertEqual(response.status_code, 302)
         response = Client(follow=True).post('forms/input_info/', {
                                 'first_name': 'test',
                                 'last_name': 'test',
                                 'user_email': 'testtest.ru'})
         self.assertEqual(response.redirect_chain, '/forms/input_info.html')
-        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.status_code, 302)
         response = Client(follow=True).post('forms/input_info/',
                                {
                                 'first_name': 'test',
