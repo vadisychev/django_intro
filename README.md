@@ -6,4 +6,6 @@ Here I will try to create 2 web-pages connected with DB.
 - [ ] save the form to DB
  
 3. 2nd web-page will display all notes and date creation info.
-- [ ] show the table with data for DB
+- [.] show the table with data for DB
+
+update to check GitActions work
