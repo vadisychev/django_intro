@@ -1,0 +1,22 @@
+name: run-tests
+on:
+  push:
+    branches: [main]
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: copy repo to vm
+        uses: actions/checkout@v2
+      - name: set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8.4
+      - name: install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: run tests
+        run: |
+          python3 manage.py test
+
