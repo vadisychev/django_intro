@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from .models import UserInfo
 from .forms import NameForm
@@ -32,9 +32,11 @@ def input_info(request):
                 registration_date=timezone.now()
                 )
             new_user.save()
-            return registration_book_bootstrap(request)
+            return redirect('/forms/registration_book/')
+            # return registration_book_bootstrap(request)
         else:
-            return render(request, 'forms/input_info_bootstrap/', {'form': NameForm()})
+            return redirect('/forms/input_info_bootstrap/')
+            # return render(request, 'forms/input_info_bootstrap.html', {'form': NameForm()})
     else:
         # form = NameForm()
         return render(request, 'forms/input_info.html', {'form': NameForm()})

@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, SimpleTestCase
 from django.test import Client
 from forms.models import UserInfo
 
@@ -35,30 +35,63 @@ class InputInfo(TestCase):
         response = Client().get('/forms/input_info/')
         self.assertEqual(response.status_code, 200)
 
+
+class InputInfoRedirect(TestCase):
+
     def test_redirect_chain_post(self):
-        response = Client(follow=True).post('/forms/input_info/', {
+        response = Client().post('/forms/input_info/', {
                                 'first_name': 'test',
                                 'last_name': 'test',
                                 'user_email': 'test@test.ru'
-                                })
-        self.assertEqual(response.content, '/forms/input_info/forms/registration_book/')
-        self.assertEqual(response.status_code, 302)
-        response = Client(follow=True).post('forms/input_info/', {
-                                'first_name': 'test',
-                                'last_name': 'test',
-                                'user_email': 'testtest.ru'})
-        self.assertEqual(response.redirect_chain, '/forms/input_info.html')
-        self.assertEqual(response.status_code, 302)
-        response = Client(follow=True).post('forms/input_info/',
-                               {
-                                'first_name': 'test',
-                                'last_name': '',
-                                'user_email': 'test@test.ru'})
-        self.assertEqual(response.redirect_chain, '/forms/input_info.html')
-        response = Client(follow=True).post('forms/input_info/',
-                               {
-                                'first_name': '',
-                                'last_name': 'test',
-                                'user_email': 'test@test.ru'})
-        self.assertEqual(response.redirect_chain, '/forms/input_info.html')
+                                },
+                                follow=True
+                                )
+        self.assertRedirects(response,
+                             expected_url='/forms/registration_book/',
+                             status_code=302,
+                             target_status_code=200,
+                             fetch_redirect_response=True
+                             )
+        response = Client().post('/forms/input_info/',
+                                 {
+                                  'first_name': 'test',
+                                  'last_name': 'test',
+                                  'user_email': 'testtest.ru'
+                                  },
+                                 foloow=True
+                                 )
+        self.assertRedirects(response,
+                             expected_url='/forms/input_info_bootstrap/',
+                             status_code=302,
+                             target_status_code=200,
+                             fetch_redirect_response=True
+                             )
+        response = Client().post('/forms/input_info/',
+                                 {
+                                  'first_name': 'test',
+                                  'last_name': '',
+                                  'user_email': 'test@test.ru'
+                                  },
+                                 follow=True
+                                 )
+        self.assertRedirects(response,
+                             expected_url='/forms/input_info_bootstrap/',
+                             status_code=302,
+                             target_status_code=200,
+                             fetch_redirect_response=True
+                             )
+        response = Client().post('/forms/input_info/',
+                                 {
+                                  'first_name': '',
+                                  'last_name': 'test',
+                                  'user_email': 'test@test.ru'
+                                  },
+                                 follow=True
+                                 )
+        self.assertRedirects(response,
+                             expected_url='/forms/input_info_bootstrap/',
+                             status_code=302,
+                             target_status_code=200,
+                             fetch_redirect_response=True
+                             )
 
